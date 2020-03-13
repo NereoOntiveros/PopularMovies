@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PopularMovies</string>
+    <string name="error_message">
+        There is no internet connection. Please try again.
+    </string>
+    <string name="error_connection">
+        There is no Network connection. Please try again.
+    </string>
+    <string name="movie_poster">movie_poster</string>
+    <string name="highest_rated">Highest rated</string>
+    <string name="most_popular">Most popular</string>
 </resources>
