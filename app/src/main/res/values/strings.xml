@@ -9,4 +9,6 @@
     <string name="movie_poster">movie_poster</string>
     <string name="highest_rated">Highest rated</string>
     <string name="most_popular">Most popular</string>
+    <string name="favourites">My favourites</string>
+    <string name="fav_buttom">Fav buttom</string>
 </resources>

@@ -19,7 +19,7 @@ public class NetworkUtils {
     private static final String PATH_3="movie";
 
     /*=======PLEASE INSERT API KEY HERE: ============  */
-    private static final String API_KEY="";
+    private static final String API_KEY="85ecdecc23fab975c727432b54b0a5e1";
 
 
 
@@ -55,6 +55,44 @@ public class NetworkUtils {
                 .appendPath(PATH_1)
                 .appendPath(PATH_3)
                 .appendPath(sortedBy)
+                .appendQueryParameter("api_key",API_KEY);
+        try {
+            url = new URL(uri.toString());
+        }catch (MalformedURLException e){
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+
+    public static URL buildReviewUrl(int movieId){
+        Uri.Builder uri = new Uri.Builder();;
+        URL url = null;
+
+        uri.scheme(SCHEME)
+                .authority(AUTHORITY)
+                .appendPath(PATH_1)
+                .appendPath(PATH_3)
+                .appendPath(Integer.toString(movieId))
+                .appendPath("reviews")
+                .appendQueryParameter("api_key",API_KEY);
+        try {
+            url = new URL(uri.toString());
+        }catch (MalformedURLException e){
+            e.printStackTrace();
+        }
+        return url;
+    }
+    public static URL buildTrailerUrl(int movieId){
+        Uri.Builder uri = new Uri.Builder();;
+        URL url = null;
+
+        uri.scheme(SCHEME)
+                .authority(AUTHORITY)
+                .appendPath(PATH_1)
+                .appendPath(PATH_3)
+                .appendPath(Integer.toString(movieId))
+                .appendPath("videos")
                 .appendQueryParameter("api_key",API_KEY);
         try {
             url = new URL(uri.toString());

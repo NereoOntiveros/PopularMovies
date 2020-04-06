@@ -36,8 +36,17 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
 
-
-
+    def room_version = "2.2.5"
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
 
 }
 

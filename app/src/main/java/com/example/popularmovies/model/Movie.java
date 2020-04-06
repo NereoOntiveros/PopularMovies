@@ -3,13 +3,26 @@ package com.example.popularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+
+@Entity(tableName = "movies")
 public class Movie implements Parcelable {
 
+
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "release_date")
     private String release_date;
+    @ColumnInfo(name = "movie_poster")
     private String movie_poster;
+    @ColumnInfo(name = "synopsis")
     private String synopsis;
+    @ColumnInfo(name = "vote_avg")
     private Double vote_avg;
+    @PrimaryKey
     private Integer movie_id;
 
     public Movie(){}

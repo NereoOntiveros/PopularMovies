@@ -1,4 +1,4 @@
-package com.example.popularmovies;
+package com.example.popularmovies.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,20 +12,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.popularmovies.R;
 import com.example.popularmovies.model.Movie;
 import com.example.popularmovies.utils.JsonUtils;
 import com.example.popularmovies.utils.NetworkUtils;
+import com.example.popularmovies.viewModel.MovieViewModel;
 
 import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PopularMoviesAdapter.PMadapterOnClickHandler {
 
@@ -34,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
     private TextView mErrorDisplay;
     private TextView mErrorConnection;
     private ProgressBar mLoadingIndicator;
+    private MovieViewModel movieViewModel;
+    private LiveData<List<Movie>> allMoviesLiveData;
     private static final String DEBUG_TAG = "NetworkStatusExample";
 
     @Override
@@ -87,6 +96,24 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
         showMoviesDataView();
         URL url = NetworkUtils.buildUrl(order);
         new FetchMoviesTask().execute(url);
+    }
+    private void loadFavourites(){
+        movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+
+        if(movieViewModel.getAllMovies()!=null){
+            allMoviesLiveData = movieViewModel.getAllMovies();
+            allMoviesLiveData.observe(this, new Observer<List<Movie>>() {
+                @Override
+                public void onChanged(List<Movie> movies) {
+                    mMoviesAdapter.setMoviesData((ArrayList<Movie>) movies);
+                }
+            });
+
+
+        }else {
+            Toast.makeText(this,"There are no favourites movies added yet.",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -190,16 +217,21 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
             if(thereIsConnection()){
                 int id = item.getItemId();
                 String orderBy ="";
-                if(id==R.id.action_most_popular){
-                    orderBy = "popular";
 
-                }else if (id==R.id.action_highest_rated){
-                    orderBy = "top_rated";
+                if(id==R.id.action_favourites){
+                    loadFavourites();
+                }else {
+                    if(id==R.id.action_most_popular){
+                        orderBy = "popular";
+
+                    }else if (id==R.id.action_highest_rated){
+                        orderBy = "top_rated";
+
+                    }
+                    mMoviesAdapter.setMoviesData(null);
+                    loadMovies(orderBy);
 
                 }
-                mMoviesAdapter.setMoviesData(null);
-                loadMovies(orderBy);
-
 
             }else {
                 showNetworkConnectionErrorMessage();
