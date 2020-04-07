@@ -3,8 +3,8 @@ package com.example.popularmovies.viewModel;
 
 import android.app.Application;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.popularmovies.model.Movie;
 import com.example.popularmovies.utils.MovieRepository;
@@ -13,17 +13,18 @@ import java.util.List;
 
 /*MovieViewModel provides the interface between the UI and the data layer of the app,
 * represented by the Repository*/
-public class MovieViewModel extends ViewModel {
-
+//public class MovieViewModel extends ViewModel {
+public class MovieViewModel extends AndroidViewModel{
     private MovieRepository mRepository;
     private LiveData<List<Movie>> mAllMovies;
 
-    public MovieViewModel(){
-    }
-    public MovieViewModel(Application application){
-        //super(application);
+    //public MovieViewModel(){}
+
+        public MovieViewModel(Application application){
+        super(application);
         mRepository = new MovieRepository(application);
         mAllMovies = mRepository.getAllMovies();
+
 
     }
 
