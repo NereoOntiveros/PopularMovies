@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -102,9 +101,9 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
                 loadReviews(mMovie.getMovie_id());
 
                 mMovieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+                mMovieViewModel.setRepository(getApplication());
 
 
-                Log.d("Prueba viewmodel:",mMovieViewModel.toString());
             }
 
         }
@@ -200,20 +199,21 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     }
 
     public void toggleFavourite(View view){
-        Log.d("pruebaaaaa",mMovie.getTitle());
+        Movie checkedMovie = mMovieViewModel.getMovie(mMovie.getMovie_id());
 
 
-        if(mMovieViewModel.getMovie(mMovie)!=null){
-            mMovieViewModel.deleteMovie(mMovie);
-
-            Toast.makeText(this,"Movie deleted from your favourites",
-                    Toast.LENGTH_LONG).show();
-
-        }else {
+        if(checkedMovie==null){
             mMovieViewModel.insert(mMovie);
             Toast.makeText(this,"Movie added to your favourites",
                     Toast.LENGTH_LONG).show();
+        }else if(checkedMovie.getMovie_id()==mMovie.getMovie_id()) {
+            mMovieViewModel.deleteMovie(mMovie);
+            Toast.makeText(this,"Movie deleted from your favourites",
+                    Toast.LENGTH_LONG).show();
         }
+
+
+
 
 
 
