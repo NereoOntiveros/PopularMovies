@@ -55,12 +55,6 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
         }else {
             showNetworkConnectionErrorMessage();
         }
-
-
-
-
-
-
     }
 
     private boolean thereIsConnection() {
@@ -98,23 +92,34 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
         new FetchMoviesTask().execute(url);
     }
     private void loadFavourites(){
+
         movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+        movieViewModel.setRepository(getApplication());
 
-        if(movieViewModel.getAllMovies()!=null){
-            allMoviesLiveData = movieViewModel.getAllMovies();
-            allMoviesLiveData.observe(this, new Observer<List<Movie>>() {
-                @Override
-                public void onChanged(List<Movie> movies) {
-                    mMoviesAdapter.setMoviesData((ArrayList<Movie>) movies);
-                }
-            });
+        int rows = movieViewModel.countMovies();
+        Toast.makeText(this,String.valueOf(rows),
+                Toast.LENGTH_LONG).show();
 
-
-        }else {
+        if(rows<1){
             Toast.makeText(this,"There are no favourites movies added yet.",
                     Toast.LENGTH_LONG).show();
+
+        }else {
+            allMoviesLiveData = movieViewModel.getAllMovies();
+        Toast.makeText(this,String.valueOf(movieViewModel.getAllMovies().getValue()),
+                Toast.LENGTH_LONG).show();
+            allMoviesLiveData.observe(this, new Observer<List<Movie>>() {
+
+                @Override
+                public void onChanged(List<Movie> movies) {
+
+                    mMoviesAdapter.setMoviesData((ArrayList<Movie>) movies);
+
+                }
+
+            });
         }
-    }
+}
 
     @Override
     public void onClick(Movie selectedMovie){
