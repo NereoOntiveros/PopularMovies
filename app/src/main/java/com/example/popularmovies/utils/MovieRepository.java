@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.popularmovies.model.Movie;
 import com.example.popularmovies.model.MovieDao;
@@ -13,8 +14,11 @@ import java.util.List;
 
 public class MovieRepository {
 
+    private Movie mMovie;
+    private int numOfRows;
     private MovieDao mMovieDao;
     private LiveData<List<Movie>> mAllMovies;
+    private MutableLiveData<Integer> numOfRowsMutable;
 
     public MovieRepository(Application application){
         MovieRoomDatabase db = MovieRoomDatabase.getDatabase(application);
@@ -29,9 +33,21 @@ public class MovieRepository {
     public void  insert(Movie movie){new insertAsyncTask(mMovieDao).execute(movie);}
     public void update(Movie movie){new updateMovieAsyncTask(mMovieDao).execute(movie);}
     public void deleteAll(){new deleteAllMoviesAsyncTask(mMovieDao).execute();}
-    public Movie getMovie(Movie movie){new getMovieAsyncTask(mMovieDao).execute(movie);
-        return movie;
+    public Movie getMovie(Integer id){
+         new getMovieAsyncTask(mMovieDao).execute(id);
+        return mMovie;
+
     }
+    public Integer countMovies(){
+        new countMoviesAsyncTask(mMovieDao).execute();
+
+
+        return numOfRows;
+
+    }
+
+
+
     /*Must run off main thread*/
     public void deleteMovie(Movie movie){new deleteMovieAsyncTask(mMovieDao).execute(movie);}
 
@@ -39,7 +55,7 @@ public class MovieRepository {
 
     /*Inserts a movie into the database*/
 
-    private static class insertAsyncTask extends AsyncTask<Movie, Void, Void>{
+    private  class insertAsyncTask extends AsyncTask<Movie, Void, Void>{
         private MovieDao mAsynctaskDao;
 
         insertAsyncTask(MovieDao dao){mAsynctaskDao=dao;}
@@ -52,7 +68,7 @@ public class MovieRepository {
 
     /*Deletes all movies from the database (does not delete the table)*/
 
-    private static class deleteAllMoviesAsyncTask extends AsyncTask<Void,Void,Void>{
+    private  class deleteAllMoviesAsyncTask extends AsyncTask<Void,Void,Void>{
         private MovieDao mAsyncTaskDao;
 
         deleteAllMoviesAsyncTask(MovieDao dao){mAsyncTaskDao=dao;}
@@ -67,7 +83,7 @@ public class MovieRepository {
 
     /*Deletes a single movie from the database*/
 
-    private static class deleteMovieAsyncTask extends AsyncTask<Movie,Void,Void>{
+    private  class deleteMovieAsyncTask extends AsyncTask<Movie,Void,Void>{
         private MovieDao mAsyncTaskDao;
 
         deleteMovieAsyncTask(MovieDao dao) {
@@ -82,7 +98,7 @@ public class MovieRepository {
     }
 
     /*Updates a movie in the database*/
-    private static class updateMovieAsyncTask extends AsyncTask<Movie,Void,Void>{
+    private  class updateMovieAsyncTask extends AsyncTask<Movie,Void,Void>{
         private MovieDao mAsyncTaskDao;
 
         updateMovieAsyncTask(MovieDao dao){mAsyncTaskDao=dao;}
@@ -95,8 +111,7 @@ public class MovieRepository {
     }
 
     /*Gets a movie from the database*/
-
-    private static class getMovieAsyncTask extends AsyncTask<Movie, Void, Movie> {
+    private  class getMovieAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         private MovieDao mAsyncTaskDao;
 
@@ -104,11 +119,39 @@ public class MovieRepository {
 
 
         @Override
-        protected Movie doInBackground(Movie... movies) {
+        protected Void doInBackground(Integer... id) {
 
-            return mAsyncTaskDao.getMovie(movies[0].getMovie_id());
+            mMovie=mAsyncTaskDao.getMovie(id[0]);
+            return null;
+
+        }
+
+
+    }
+
+    /*Gets the number of rows from the table*/
+    private  class countMoviesAsyncTask extends AsyncTask<Void,Void,Integer>{
+        private MovieDao mAsyncTaskDao;
+        private int numberOfRows;
+
+        countMoviesAsyncTask(MovieDao dao){mAsyncTaskDao=dao;}
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+
+            numberOfRows=mAsyncTaskDao.countMovies();
+            return numberOfRows;
+        }
+
+        @Override
+        protected void onPostExecute(Integer numberOfRows) {
+
+            numOfRows=numberOfRows;
+
 
         }
     }
+
+
 
 }
