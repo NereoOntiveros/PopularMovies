@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
     private ProgressBar mLoadingIndicator;
     private MovieViewModel movieViewModel;
     private LiveData<List<Movie>> allMoviesLiveData;
+    private Integer rows;
     private static final String DEBUG_TAG = "NetworkStatusExample";
 
     @Override
@@ -96,29 +97,35 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
         movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         movieViewModel.setRepository(getApplication());
 
-        int rows = movieViewModel.countMovies();
+        /*int rows = movieViewModel.countMovies();
         Toast.makeText(this,String.valueOf(rows),
-                Toast.LENGTH_LONG).show();
+                Toast.LENGTH_SHORT).show();
 
         if(rows<1){
             Toast.makeText(this,"There are no favourites movies added yet.",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
 
-        }else {
+        }else {*/
             allMoviesLiveData = movieViewModel.getAllMovies();
         Toast.makeText(this,String.valueOf(movieViewModel.getAllMovies().getValue()),
-                Toast.LENGTH_LONG).show();
+                Toast.LENGTH_SHORT).show();
+            rows = movieViewModel.countMovies();
+
             allMoviesLiveData.observe(this, new Observer<List<Movie>>() {
 
                 @Override
                 public void onChanged(List<Movie> movies) {
-
+                    rows = movieViewModel.countMovies();
                     mMoviesAdapter.setMoviesData((ArrayList<Movie>) movies);
 
                 }
 
-            });
-        }
+            } );
+        Toast.makeText(this,String.valueOf(rows),
+                Toast.LENGTH_SHORT).show();
+
+
+        //}
 }
 
     @Override
