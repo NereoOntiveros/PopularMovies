@@ -19,7 +19,7 @@ public class NetworkUtils {
     private static final String PATH_3="movie";
 
     /*=======PLEASE INSERT API KEY HERE: ============  */
-    private static final String API_KEY="";
+    private static final String API_KEY="85ecdecc23fab975c727432b54b0a5e1";
 
 
 
@@ -66,7 +66,7 @@ public class NetworkUtils {
 
 
     public static URL buildReviewUrl(int movieId){
-        Uri.Builder uri = new Uri.Builder();;
+        Uri.Builder uri = new Uri.Builder();
         URL url = null;
 
         uri.scheme(SCHEME)
@@ -84,7 +84,7 @@ public class NetworkUtils {
         return url;
     }
     public static URL buildTrailerUrl(int movieId){
-        Uri.Builder uri = new Uri.Builder();;
+        Uri.Builder uri = new Uri.Builder();
         URL url = null;
 
         uri.scheme(SCHEME)

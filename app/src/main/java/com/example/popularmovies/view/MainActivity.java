@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
     private ProgressBar mLoadingIndicator;
     private MovieViewModel movieViewModel;
     private LiveData<List<Movie>> allMoviesLiveData;
+    private LiveData<Integer>rowsMutableLD;
     private Integer rows;
     private static final String DEBUG_TAG = "NetworkStatusExample";
 
@@ -92,40 +93,44 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
         URL url = NetworkUtils.buildUrl(order);
         new FetchMoviesTask().execute(url);
     }
-    private void loadFavourites(){
 
+    private void observeMoviesLiveData(){
+        allMoviesLiveData.observe(this, new Observer<List<Movie>>() {
+
+            @Override
+            public void onChanged(List<Movie> movies) {
+
+                mMoviesAdapter.setMoviesData((ArrayList<Movie>) movies);
+
+            }
+
+        } );
+    }
+
+    private void noAddedYetMessage(){
+        Toast.makeText(this,"No movies added yet.",Toast.LENGTH_SHORT).show();
+    }
+    private void loadFavourites(){
         movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         movieViewModel.setRepository(getApplication());
+        allMoviesLiveData = movieViewModel.getAllMovies();
+        rowsMutableLD = movieViewModel.countMovies();
 
-        /*int rows = movieViewModel.countMovies();
-        Toast.makeText(this,String.valueOf(rows),
-                Toast.LENGTH_SHORT).show();
+        rowsMutableLD.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
 
-        if(rows<1){
-            Toast.makeText(this,"There are no favourites movies added yet.",
-                    Toast.LENGTH_SHORT).show();
-
-        }else {*/
-            allMoviesLiveData = movieViewModel.getAllMovies();
-        Toast.makeText(this,String.valueOf(movieViewModel.getAllMovies().getValue()),
-                Toast.LENGTH_SHORT).show();
-            rows = movieViewModel.countMovies();
-
-            allMoviesLiveData.observe(this, new Observer<List<Movie>>() {
-
-                @Override
-                public void onChanged(List<Movie> movies) {
-                    rows = movieViewModel.countMovies();
-                    mMoviesAdapter.setMoviesData((ArrayList<Movie>) movies);
-
+                rows = rowsMutableLD.getValue();
+                if(rows>0){
+                    observeMoviesLiveData();
+                }else {
+                    noAddedYetMessage();
                 }
 
-            } );
-        Toast.makeText(this,String.valueOf(rows),
-                Toast.LENGTH_SHORT).show();
+            }
 
+        });
 
-        //}
 }
 
     @Override

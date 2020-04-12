@@ -18,44 +18,53 @@ public class MovieRepository {
     private int numOfRows;
     private MovieDao mMovieDao;
     private LiveData<List<Movie>> mAllMovies;
-    private MutableLiveData<Integer> numOfRowsMutable;
+    private static MutableLiveData<Integer> numOfRowsMutable;
+    private static MutableLiveData<Movie> movieMutableLiveData;
 
     public MovieRepository(Application application){
         MovieRoomDatabase db = MovieRoomDatabase.getDatabase(application);
         mMovieDao = db.movieDao();
         mAllMovies = mMovieDao.getAllMovies();
+        numOfRowsMutable = new MutableLiveData<>();
+        movieMutableLiveData= new MutableLiveData<>();
     }
 
     public LiveData<List<Movie>> getAllMovies(){
         return mAllMovies;
     }
 
-    public void  insert(Movie movie){new insertAsyncTask(mMovieDao).execute(movie);}
-    public void update(Movie movie){new updateMovieAsyncTask(mMovieDao).execute(movie);}
-    public void deleteAll(){new deleteAllMoviesAsyncTask(mMovieDao).execute();}
-    public Movie getMovie(Integer id){
+    public void  insert(Movie movie){
+        new insertAsyncTask(mMovieDao).execute(movie);}
+    public void update(Movie movie){
+        new updateMovieAsyncTask(mMovieDao).execute(movie);}
+    public void deleteAll(){
+        new deleteAllMoviesAsyncTask(mMovieDao).execute();}
+    public MutableLiveData<Movie> getMovie(Integer id){
          new getMovieAsyncTask(mMovieDao).execute(id);
-        return mMovie;
-
+         return movieMutableLiveData;
     }
-    public Integer countMovies(){
-        new countMoviesAsyncTask(mMovieDao).execute();
+    public MutableLiveData<Movie> getMLDmovie(){
 
-
-        return numOfRows;
-
+        return movieMutableLiveData;
+    }
+    public void countMovies(){
+               new countMoviesAsyncTask(mMovieDao).execute();
+    }
+    public MutableLiveData<Integer> getNumberOfRows(){
+        return numOfRowsMutable;
     }
 
 
 
     /*Must run off main thread*/
-    public void deleteMovie(Movie movie){new deleteMovieAsyncTask(mMovieDao).execute(movie);}
+    public void deleteMovie(Movie movie){
+        new deleteMovieAsyncTask(mMovieDao).execute(movie);}
 
     //**********Static inner classes to run database interactions in the background:*******
 
     /*Inserts a movie into the database*/
 
-    private  class insertAsyncTask extends AsyncTask<Movie, Void, Void>{
+    private static class insertAsyncTask extends AsyncTask<Movie, Void, Void>{
         private MovieDao mAsynctaskDao;
 
         insertAsyncTask(MovieDao dao){mAsynctaskDao=dao;}
@@ -68,7 +77,7 @@ public class MovieRepository {
 
     /*Deletes all movies from the database (does not delete the table)*/
 
-    private  class deleteAllMoviesAsyncTask extends AsyncTask<Void,Void,Void>{
+    private static class deleteAllMoviesAsyncTask extends AsyncTask<Void,Void,Void>{
         private MovieDao mAsyncTaskDao;
 
         deleteAllMoviesAsyncTask(MovieDao dao){mAsyncTaskDao=dao;}
@@ -83,7 +92,7 @@ public class MovieRepository {
 
     /*Deletes a single movie from the database*/
 
-    private  class deleteMovieAsyncTask extends AsyncTask<Movie,Void,Void>{
+    private static class deleteMovieAsyncTask extends AsyncTask<Movie,Void,Void>{
         private MovieDao mAsyncTaskDao;
 
         deleteMovieAsyncTask(MovieDao dao) {
@@ -98,7 +107,7 @@ public class MovieRepository {
     }
 
     /*Updates a movie in the database*/
-    private  class updateMovieAsyncTask extends AsyncTask<Movie,Void,Void>{
+    private static class updateMovieAsyncTask extends AsyncTask<Movie,Void,Void>{
         private MovieDao mAsyncTaskDao;
 
         updateMovieAsyncTask(MovieDao dao){mAsyncTaskDao=dao;}
@@ -111,28 +120,32 @@ public class MovieRepository {
     }
 
     /*Gets a movie from the database*/
-    private  class getMovieAsyncTask extends AsyncTask<Integer, Void, Void> {
+    private  static class getMovieAsyncTask extends AsyncTask<Integer, Void, Movie> {
 
         private MovieDao mAsyncTaskDao;
+        private Movie aMovie;
 
         getMovieAsyncTask(MovieDao dao){mAsyncTaskDao=dao;}
 
 
         @Override
-        protected Void doInBackground(Integer... id) {
+        protected Movie doInBackground(Integer... id) {
 
-            mMovie=mAsyncTaskDao.getMovie(id[0]);
-            return null;
+            aMovie=mAsyncTaskDao.getMovie(id[0]);
+            return aMovie;
 
         }
 
-
+        @Override
+        protected void onPostExecute(Movie aMovie) {
+            movieMutableLiveData.setValue(aMovie);
+        }
     }
 
     /*Gets the number of rows from the table*/
-    private  class countMoviesAsyncTask extends AsyncTask<Void,Void,Integer>{
+    private  static class countMoviesAsyncTask extends AsyncTask<Void,Void,Integer>{
         private MovieDao mAsyncTaskDao;
-        private int numberOfRows;
+        private Integer numberOfRows;
 
         countMoviesAsyncTask(MovieDao dao){mAsyncTaskDao=dao;}
 
@@ -141,12 +154,14 @@ public class MovieRepository {
 
             numberOfRows=mAsyncTaskDao.countMovies();
             return numberOfRows;
+
         }
 
         @Override
         protected void onPostExecute(Integer numberOfRows) {
 
-            numOfRows=numberOfRows;
+            numOfRowsMutable.setValue(numberOfRows);
+
 
 
         }

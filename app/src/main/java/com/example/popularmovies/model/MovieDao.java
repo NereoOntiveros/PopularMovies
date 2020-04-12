@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface MovieDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Movie movie);
 
     @Query("DELETE FROM movies")
@@ -21,15 +21,15 @@ public interface MovieDao {
     @Delete
     void deleteMovie(Movie movie);
 
-    @Query("SELECT * from movies LIMIT 1")
-    Movie[] getAnyMovie();
-
     @Query("SELECT * from movies where movie_id in (:id)")
     Movie getMovie(int id);
 
-    @Query("SELECT * from movies ORDER BY movie_id ASC")
+    @Query("SELECT * from movies")
     LiveData<List<Movie>> getAllMovies();
 
     @Update
     void update(Movie... movie);
+
+    @Query("SELECT COUNT(*) from movies")
+    Integer countMovies();
 }

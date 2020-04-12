@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 public class DetailActivity extends AppCompatActivity implements TrailersAdapter.TrailersAdapterOnClickHandler{
 
     private Movie mMovie;
+    private Movie aMovie;
     private ImageView mPosterDisplay;
     private TextView mTitleDisplay;
     private TextView mReleaseDateDisplay;
@@ -44,6 +47,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     private TrailersAdapter trailersAdapter;
     private ReviewsAdapter reviewsAdapter;
     private MovieViewModel mMovieViewModel;
+    private MutableLiveData<Movie> movieMLD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -199,24 +203,30 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     }
 
     public void toggleFavourite(View view){
-        Movie checkedMovie = mMovieViewModel.getMovie(mMovie.getMovie_id());
 
+        movieMLD=mMovieViewModel.getMovie(mMovie.getMovie_id());
+        movieMLD.observe(this, new Observer<Movie>() {
+            @Override
+            public void onChanged(Movie movie) {
+                aMovie =movieMLD.getValue();
 
-        if(checkedMovie==null){
-            mMovieViewModel.insert(mMovie);
-            Toast.makeText(this,"Movie added to your favourites",
-                    Toast.LENGTH_LONG).show();
-        }else if(checkedMovie.getMovie_id()==mMovie.getMovie_id()) {
-            mMovieViewModel.deleteMovie(mMovie);
-            Toast.makeText(this,"Movie deleted from your favourites",
-                    Toast.LENGTH_LONG).show();
-        }
+                if(aMovie==null){
+                    saveMovie();
+                }else if(mMovie.getMovie_id().equals(aMovie.getMovie_id())) {
+                    deleteMovie();
+                }
+            }
+        });
 
+    }
 
-
-
-
-
+    public void saveMovie(){
+        mMovieViewModel.insert(mMovie);
+        Toast.makeText(this,"Movie added!",Toast.LENGTH_SHORT).show();
+    }
+    public void deleteMovie(){
+        mMovieViewModel.deleteMovie(mMovie);
+        Toast.makeText(this,"Movie deleted!",Toast.LENGTH_SHORT).show();
     }
 
 

@@ -11,7 +11,8 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "movies")
 public class Movie implements Parcelable {
 
-
+    @PrimaryKey
+    private Integer movie_id;
     @ColumnInfo(name = "title")
     private String title;
     @ColumnInfo(name = "release_date")
@@ -22,8 +23,7 @@ public class Movie implements Parcelable {
     private String synopsis;
     @ColumnInfo(name = "vote_avg")
     private Double vote_avg;
-    @PrimaryKey
-    private Integer movie_id;
+
 
     public Movie(){}
     public Movie(Parcel in){
