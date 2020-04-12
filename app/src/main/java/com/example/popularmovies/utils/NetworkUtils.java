@@ -19,7 +19,7 @@ public class NetworkUtils {
     private static final String PATH_3="movie";
 
     /*=======PLEASE INSERT API KEY HERE: ============  */
-    private static final String API_KEY="85ecdecc23fab975c727432b54b0a5e1";
+    private static final String API_KEY="<INSERT API KEY HERE>";
 
 
 

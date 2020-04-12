@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
     private MovieViewModel movieViewModel;
     private LiveData<List<Movie>> allMoviesLiveData;
     private LiveData<Integer>rowsMutableLD;
+    private String orderBy;
     private Integer rows;
     private static final String DEBUG_TAG = "NetworkStatusExample";
 
@@ -51,13 +52,32 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if(thereIsConnection()){
             setUpRecyclerView();
             loadMovies();
+
         }else {
             showNetworkConnectionErrorMessage();
         }
+        if(savedInstanceState!= null){
+
+            orderBy = savedInstanceState.getString("orderCriteria");
+
+            if(orderBy=="favourites"){
+                loadFavourites();
+            }else {
+                loadMovies(orderBy);
+            }
+        }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("orderCriteria",orderBy);
+    }
+
 
     private boolean thereIsConnection() {
 
@@ -233,10 +253,10 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
     public boolean onOptionsItemSelected(MenuItem item){
             if(thereIsConnection()){
                 int id = item.getItemId();
-                String orderBy ="";
 
                 if(id==R.id.action_favourites){
                     loadFavourites();
+                    orderBy = "favourites";
                 }else {
                     if(id==R.id.action_most_popular){
                         orderBy = "popular";
