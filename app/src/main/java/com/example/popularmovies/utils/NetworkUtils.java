@@ -2,6 +2,8 @@ package com.example.popularmovies.utils;
 
 import android.net.Uri;
 
+import com.example.popularmovies.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -18,8 +20,8 @@ public class NetworkUtils {
     private static final String PATH_2="discover";
     private static final String PATH_3="movie";
 
-    /*=======PLEASE INSERT API KEY HERE: ============  */
-    private static final String API_KEY="<INSERT API KEY HERE>";
+
+    private static final String API_KEY= BuildConfig.API_KEY;
 
 
 
