@@ -24,4 +24,4 @@ When the user taps on a movie poster, there is a transition to a details screen 
 
 ## Demo
 
-![](demo/popularmovies.gif)
+![](app/demo/popularmovies.gif)
