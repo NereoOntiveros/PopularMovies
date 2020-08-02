@@ -42,6 +42,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
         return new ReviewsViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ReviewsViewHolder holder, int position) {
         Review review = reviewsData.get(position);
@@ -49,6 +50,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
         holder.mReviewAuthor.setText(review.getAuthor());
         holder.mReviewContent.setText(review.getContent());
     }
+
 
     @Override
     public int getItemCount() {

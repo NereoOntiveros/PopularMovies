@@ -39,9 +39,7 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
     private RecyclerView mRecyclerView;
     private PopularMoviesAdapter mMoviesAdapter;
     private TextView mErrorDisplay;
-    private TextView mErrorConnection;
     private ProgressBar mLoadingIndicator;
-    private MovieViewModel movieViewModel;
     private LiveData<List<Movie>> allMoviesLiveData;
     private LiveData<Integer>rowsMutableLD;
     private String orderBy;
@@ -131,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
         Toast.makeText(this,"No movies added yet.",Toast.LENGTH_SHORT).show();
     }
     private void loadFavourites(){
-        movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+        MovieViewModel movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         movieViewModel.setRepository(getApplication());
         allMoviesLiveData = movieViewModel.getAllMovies();
         rowsMutableLD = movieViewModel.countMovies();
@@ -173,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
     }
 
     private void showNetworkConnectionErrorMessage(){
-        mErrorConnection = findViewById(R.id.tv_error_connection_display);
+        TextView mErrorConnection = findViewById(R.id.tv_error_connection_display);
         mErrorConnection.setVisibility(View.VISIBLE);
     }
 

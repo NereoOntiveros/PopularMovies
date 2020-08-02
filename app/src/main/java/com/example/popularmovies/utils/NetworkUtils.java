@@ -21,7 +21,7 @@ public class NetworkUtils {
     private static final String PATH_3="movie";
 
 
-    private static final String API_KEY= ""; //<--please insert key
+    private static final String API_KEY= BuildConfig.API_KEY;
 
 
 

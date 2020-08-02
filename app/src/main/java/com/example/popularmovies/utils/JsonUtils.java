@@ -30,7 +30,7 @@ public final class JsonUtils {
         ArrayList<Movie> moviesList = new ArrayList<Movie>();
 
         try {//loops the JSONArray to parse every JSONObject into a Movie object
-            for (int i=0; i<=jsonArray.length(); i ++){
+            for (int i=0; i<jsonArray.length(); i ++){
                 JSONObject jsonMovie = jsonArray.getJSONObject(i);
                 Movie movie = new Movie();
 
@@ -59,7 +59,7 @@ public final class JsonUtils {
         ArrayList<Trailer> trailersList = new ArrayList<Trailer>();
 
         try {//loops the JSONArray to parse every JSONObject into a Trailer object
-            for (int i=0; i<=jsonArray.length(); i ++){
+            for (int i=0; i<jsonArray.length(); i ++){
                 JSONObject jsonTrailer = jsonArray.getJSONObject(i);
                 Trailer trailer = new Trailer();
 
@@ -89,7 +89,7 @@ public final class JsonUtils {
         ArrayList<Review> reviewsList = new ArrayList<Review>();
 
         try {//loops the JSONArray to parse every JSONObject into a Review object
-            for (int i=0; i<=jsonArray.length(); i ++){
+            for (int i=0; i<jsonArray.length(); i ++){
                 JSONObject jsonReview = jsonArray.getJSONObject(i);
                 Review review = new Review();
 
