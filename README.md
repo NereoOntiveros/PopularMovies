@@ -20,3 +20,8 @@ When the user taps on a movie poster, there is a transition to a details screen 
 * Uses adapters and custom lists layouts to populate list views.
 * Data persistance using Room.
 * Incorporates libraries, like Picasso library.
+
+
+## Demo
+
+![](demo/popularmovies.gif)
