@@ -20,12 +20,3 @@ When the user taps on a movie poster, there is a transition to a details screen 
 * Uses adapters and custom lists layouts to populate list views.
 * Data persistance using Room.
 * Incorporates libraries, like Picasso library.
-
-## Issues
-
-Please insert API Key in line 22 of NetworkUtils.java.
-There is restrictions using TMDB API key, as it is private and cannot be shared in a public repository.
-
-This issue will be fixed in future commits.
-
-Thanks.
